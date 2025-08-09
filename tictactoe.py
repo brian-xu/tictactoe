@@ -10,20 +10,16 @@ class TicTacToe:
     def check_winner(self, state=None):
         if state == None:
             state = self.board
-        for i in range(3):
-            row = [state[i][0], state[i][1], state[i][2]]
-            column = [state[0][i], state[1][i], state[2][i]]
-            if row == ["X", "X", "X"] or column == ["X", "X", "X"]:
-                return "X"
-            if row == ["O", "O", "O"] or column == ["O", "O", "O"]:
-                return "O"
-        diagonals = [
+        triplets = [
             [state[0][0], state[1][1], state[2][2]],
             [state[2][0], state[1][1], state[0][2]],
         ]
-        if ["X", "X", "X"] in diagonals:
+        for i in range(3):
+            triplets.append([state[i][0], state[i][1], state[i][2]])
+            triplets.append([state[0][i], state[1][i], state[2][i]])
+        if ["X", "X", "X"] in triplets:
             return "X"
-        if ["O", "O", "O"] in diagonals:
+        if ["O", "O", "O"] in triplets:
             return "O"
         for r in range(3):
             for c in range(3):
@@ -85,11 +81,11 @@ if __name__ == "__main__":
             game_space = eval(game_space)
             print("Loaded.")
 
-    while game.check_winner() in ["D", "N"]:
+    while game.check_winner() == "N":
         print(display(game))
         move = int(input())
         res = game.make_move(move)
-        if res != "I" and game_space:
+        if game.check_winner() == "N" and res != "I":
             resp = min_max(game_space, move)
             game_space = game_space[move][resp]
             game.make_move(resp)
